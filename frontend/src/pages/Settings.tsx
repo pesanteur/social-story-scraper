@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { settingsAPI } from '../services/api';
 import { Key, Settings as SettingsIcon, Save, Trash2, Plus, Loader2 } from 'lucide-react';
-import type { APIKey, APIKeyCreate, UserPreferences, UserPreferencesUpdate } from '../types';
+import type { APIKeyCreate, UserPreferencesUpdate } from '../types';
 
 const SERVICE_LABELS: Record<string, string> = {
   apify: 'Apify (Twitter Scraper)',
@@ -118,7 +118,7 @@ export const Settings: React.FC = () => {
     updatePrefsMutation.mutate(prefsForm);
   };
 
-  const existingServices = new Set(apiKeys?.map(k => k.service_name) || []);
+  const existingServices = new Set<string>(apiKeys?.map(k => k.service_name) || []);
   const availableServices = Object.keys(SERVICE_LABELS).filter(s => !existingServices.has(s));
 
   return (

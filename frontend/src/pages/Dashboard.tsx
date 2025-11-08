@@ -3,7 +3,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { scrapeAPI } from '../services/api';
 import { Play, Clock, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
-import type { ScrapeJob } from '../types';
 import { format } from 'date-fns';
 
 const STATUS_COLORS = {

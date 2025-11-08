@@ -18,7 +18,6 @@ import {
   MessageCircle,
 } from 'lucide-react';
 import { format } from 'date-fns';
-import type { ScrapeJob, Tweet, TrendingTopic, ContentIdea } from '../types';
 
 const STATUS_ICONS = {
   pending: Clock,
