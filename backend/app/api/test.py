@@ -1,4 +1,9 @@
-"""Test/Development endpoints without authentication"""
+"""Test/Development endpoints without authentication
+
+⚠️ SECURITY WARNING ⚠️
+These endpoints bypass authentication and are ONLY for local development.
+They are automatically disabled in production environments.
+"""
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import Dict, Any
@@ -6,9 +11,28 @@ from ..database import get_db
 from ..models.user import User
 from ..models.scrape_job import ScrapeJob, JobStatus, TriggerType
 from ..core.security import get_password_hash
+from ..config import settings
 import uuid
 
-router = APIRouter(prefix="/test", tags=["test"])
+
+def check_development_mode():
+    """
+    Dependency to ensure test endpoints are only accessible in development mode.
+    Raises HTTP 403 if environment is production.
+    """
+    if settings.ENVIRONMENT.lower() != "development":
+        raise HTTPException(
+            status_code=403,
+            detail="Test endpoints are only available in development mode. "
+                   "These endpoints are disabled in production for security."
+        )
+
+
+router = APIRouter(
+    prefix="/test",
+    tags=["test"],
+    dependencies=[Depends(check_development_mode)],  # Apply to all test endpoints
+)
 
 @router.post("/init-test-user", response_model=Dict[str, Any])
 async def initialize_test_user(db: Session = Depends(get_db)):

@@ -54,7 +54,13 @@ app.include_router(auth.router, prefix=settings.API_V1_STR)
 app.include_router(settings_routes.router, prefix=settings.API_V1_STR)
 app.include_router(scrapes.router, prefix=settings.API_V1_STR)
 app.include_router(export.router, prefix=settings.API_V1_STR)
-app.include_router(test.router, prefix=settings.API_V1_STR)  # Test endpoints for local development
+
+# Only include test endpoints in development mode
+if settings.ENVIRONMENT.lower() == "development":
+    app.include_router(test.router, prefix=settings.API_V1_STR)
+    print("⚠️  WARNING: Test endpoints are enabled (development mode)")
+else:
+    print("✅ Test endpoints are disabled (production mode)")
 
 
 @app.get("/")

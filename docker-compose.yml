@@ -34,7 +34,8 @@ services:
       TIMEZONE: America/New_York
       DAILY_RUN_TIME: "06:45"
       BACKEND_CORS_ORIGINS: '["http://localhost:3000","http://localhost:8000","http://localhost","http://localhost:80"]'
-      ENVIRONMENT: production
+      # IMPORTANT: Set to "production" for production deployments to disable test endpoints
+      ENVIRONMENT: development
     depends_on:
       postgres:
         condition: service_healthy
