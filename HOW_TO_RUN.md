@@ -1,114 +1,235 @@
 # 🚀 How to Run the Social Story Scraper
 
-## Current Status
+## Quick Start (Recommended)
 
-✅ Backend code is complete and ready!
-✅ Database models created
-✅ All features implemented
-
-⚠️ **You're in a limited environment** - Need to run on your local machine
-
----
-
-## Run on Your Local Machine (Recommended)
-
-Since this environment has dependency limitations, here's how to run it on your actual computer:
-
-### 1. Get the Code
-
-The code is already in this repository on branch: `claude/social-story-scraper-011CUvKXq2qiKppn9So8yVyq`
+### Option 1: Automatic Setup (Easiest!)
 
 ```bash
+# Clone the repository
 git clone https://github.com/pesanteur/social-story-scraper.git
 cd social-story-scraper
 git checkout claude/social-story-scraper-011CUvKXq2qiKppn9So8yVyq
+
+# Run the setup script
+chmod +x setup.sh
+./setup.sh
 ```
 
-### 2. Option A: Run with Docker (Easiest)
+That's it! The script will:
+- ✅ Check for Docker installation
+- ✅ Generate secure environment keys
+- ✅ Build and start all containers
+- ✅ Verify services are running
+
+Access the app at: **http://localhost:8000/api/v1/docs**
+
+---
+
+### Option 2: Manual Docker Setup
 
 ```bash
-# Make sure Docker is installed
-docker --version
+# 1. Clone the repository
+git clone https://github.com/pesanteur/social-story-scraper.git
+cd social-story-scraper
+git checkout claude/social-story-scraper-011CUvKXq2qiKppn9So8yVyq
 
-# Start everything
+# 2. Create .env file with secure keys
+python3 -c "
+import secrets
+print('SECRET_KEY=' + secrets.token_urlsafe(32))
+print('ENCRYPTION_KEY=' + secrets.token_urlsafe(32))
+print('JWT_SECRET_KEY=' + secrets.token_urlsafe(32))
+" > .env
+
+# 3. Start services
 docker-compose up -d
 
-# Check status
-docker-compose logs backend
+# 4. Check status
+docker-compose logs -f backend
 ```
 
-Access at: http://localhost:8000/api/v1/docs
+---
 
-### 3. Option B: Run Manually
+### Option 3: Manual Setup (Without Docker)
 
 ```bash
-cd backend
+# 1. Clone the repository
+git clone https://github.com/pesanteur/social-story-scraper.git
+cd social-story-scraper/backend
 
-# Create virtual environment
+# 2. Create and activate virtual environment
 python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Install dependencies
+# 3. Install dependencies
 pip install -r requirements.txt
 
-# Run backend
-uvicorn app.main:app --reload --port 8000
+# 4. Set up environment variables
+cp .env.example .env
+# Edit .env and add your keys
+
+# 5. Create database
+python3 -c "from app.database import Base, engine; Base.metadata.create_all(bind=engine)"
+
+# 6. Run the backend
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Access at: http://localhost:8000/api/v1/docs
+---
+
+## Troubleshooting
+
+### Error: `.env file not found`
+
+**Solution:** Create the .env file in the root directory:
+
+```bash
+# Option A: Use the setup script
+./setup.sh
+
+# Option B: Create manually
+python3 -c "
+import secrets
+print('SECRET_KEY=' + secrets.token_urlsafe(32))
+print('ENCRYPTION_KEY=' + secrets.token_urlsafe(32))
+print('JWT_SECRET_KEY=' + secrets.token_urlsafe(32))
+" > .env
+```
+
+### Error: `version is obsolete`
+
+This is just a warning and can be ignored. The docker-compose file has been updated to remove the version field for newer Docker Compose versions.
+
+### Backend not starting
+
+```bash
+# Check logs
+docker-compose logs backend
+
+# Restart services
+docker-compose restart
+
+# Rebuild if needed
+docker-compose down
+docker-compose build --no-cache
+docker-compose up -d
+```
+
+### Port already in use
+
+If port 8000 or 5432 is already in use, edit `docker-compose.yml` and change the ports:
+
+```yaml
+ports:
+  - "8001:8000"  # Use 8001 instead of 8000
+```
 
 ---
 
-## What's Already Built ✅
+## Raspberry Pi Specific
 
-1. **Complete REST API** with authentication
-2. **Multi-AI Support**: Claude, Gemini, GPT-5
-3. **Twitter Scraping** via Apify
-4. **Automated Scheduling** (daily 6:45 AM)
-5. **Telegram Notifications**
-6. **CSV Exports**
-7. **Notion Integration** (optional)
+The app works on Raspberry Pi! Just make sure:
+- ✅ Docker is installed: `curl -sSL https://get.docker.com | sh`
+- ✅ Your user is in docker group: `sudo usermod -aG docker $USER`
+- ✅ You have enough memory (2GB+ recommended)
 
 ---
 
-## Next Steps After Running
+## What's Next?
 
-1. **Register Account**
-   ```bash
-   curl -X POST "http://localhost:8000/api/v1/auth/register" \
-     -H "Content-Type: application/json" \
-     -d '{"email": "you@example.com", "password": "SecurePass123!"}'
-   ```
+After the app is running:
 
-2. **Add API Keys** via `/api/v1/settings/api-keys`
+### 1. Register Your Account
 
-3. **Configure Preferences** via `/api/v1/settings/preferences`
+Visit: http://localhost:8000/api/v1/docs
 
-4. **Run First Scrape** via `/api/v1/scrapes/`
+Click on **POST /api/v1/auth/register** and try it out:
+
+```json
+{
+  "email": "your@email.com",
+  "password": "SecurePassword123!"
+}
+```
+
+### 2. Login
+
+**POST /api/v1/auth/login** with the same credentials
+
+Copy the `access_token` from the response.
+
+### 3. Add API Keys
+
+Click the **Authorize** button at the top, paste your token.
+
+Then use **POST /api/v1/settings/api-keys** to add:
+
+- Apify API key
+- OpenAI/Anthropic/Google AI key
+- Perplexity API key
+- Telegram bot token (format: `bot_token|chat_id`)
+
+### 4. Configure Preferences
+
+**PUT /api/v1/settings/preferences**:
+
+```json
+{
+  "ai_model_provider": "openai",
+  "ai_model_name": "gpt-4-turbo",
+  "twitter_list_url": "https://x.com/i/lists/YOUR_LIST_ID",
+  "daily_run_time": "06:45:00",
+  "timezone": "America/New_York",
+  "auto_run_enabled": true,
+  "max_tweets_to_scrape": "50"
+}
+```
+
+### 5. Run Your First Scrape!
+
+**POST /api/v1/scrapes/**:
+
+```json
+{
+  "trigger_type": "manual"
+}
+```
 
 ---
 
-## Full Documentation
+## Useful Commands
 
-See **README.md** for:
-- Complete setup instructions
-- API endpoint documentation
-- Telegram bot setup
-- AI model configuration
-- Troubleshooting guide
+```bash
+# View logs
+docker-compose logs -f backend
 
-See **QUICKSTART.md** for step-by-step usage examples
+# Stop services
+docker-compose down
+
+# Restart services
+docker-compose restart
+
+# Rebuild and restart
+docker-compose down
+docker-compose build
+docker-compose up -d
+
+# Check service status
+docker-compose ps
+
+# Access database
+docker-compose exec postgres psql -U scraper_user -d social_scraper_db
+```
 
 ---
 
-## Repository Status
+## Need Help?
 
-✅ Backend: **COMPLETE** (45 files, 3,311 lines of code)
-✅ Database: **COMPLETE** (7 tables, migrations ready)
-✅ Services: **COMPLETE** (Scraping, AI, Telegram, Notion)
-✅ Docker: **COMPLETE** (docker-compose.yml ready)
-🔜 Frontend: Coming soon (React + Tailwind)
+- 📖 See **README.md** for full documentation
+- 🚀 See **QUICKSTART.md** for API usage examples
+- 💬 Check logs: `docker-compose logs backend`
+- 🏥 Health check: http://localhost:8000/health
 
 ---
 
-The backend is production-ready! Just need to run it on a machine with Docker or Python 3.11+.
+**The backend is production-ready! Start scraping and analyzing social stories!** 🎉
