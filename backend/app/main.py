@@ -6,7 +6,7 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from .config import settings
 from .database import engine, Base
-from .api import auth, settings as settings_routes, scrapes, export
+from .api import auth, settings as settings_routes, scrapes, export, test
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -54,6 +54,7 @@ app.include_router(auth.router, prefix=settings.API_V1_STR)
 app.include_router(settings_routes.router, prefix=settings.API_V1_STR)
 app.include_router(scrapes.router, prefix=settings.API_V1_STR)
 app.include_router(export.router, prefix=settings.API_V1_STR)
+app.include_router(test.router, prefix=settings.API_V1_STR)  # Test endpoints for local development
 
 
 @app.get("/")
