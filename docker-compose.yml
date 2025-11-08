@@ -33,7 +33,7 @@ services:
       REFRESH_TOKEN_EXPIRE_DAYS: 7
       TIMEZONE: America/New_York
       DAILY_RUN_TIME: "06:45"
-      BACKEND_CORS_ORIGINS: '["http://localhost:3000","http://localhost:8000"]'
+      BACKEND_CORS_ORIGINS: '["http://localhost:3000","http://localhost:8000","http://localhost","http://localhost:80"]'
       ENVIRONMENT: production
     depends_on:
       postgres:
@@ -41,6 +41,18 @@ services:
     volumes:
       - ./backend:/app
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: social-scraper-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_URL=http://localhost:8000/api/v1
 
 volumes:
   postgres_data:
