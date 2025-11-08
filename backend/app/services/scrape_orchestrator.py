@@ -112,7 +112,7 @@ class ScrapeOrchestrator:
             job.ai_model_used = f"{preferences.ai_model_provider}:{preferences.ai_model_name}"
             job.status = JobStatus.COMPLETED
             job.completed_at = datetime.utcnow()
-            job.metadata = {
+            job.job_metadata = {
                 "tweets_scraped": len(tweets_data),
                 "topics_found": len(analysis_result.get('trending_topics', [])),
                 "ideas_generated": len(content_result.get('content_ideas', []))

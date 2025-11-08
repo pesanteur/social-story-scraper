@@ -21,7 +21,7 @@ class ScrapeJobResponse(BaseModel):
     started_at: Optional[datetime]
     completed_at: Optional[datetime]
     error_message: Optional[str]
-    metadata: Optional[Dict[str, Any]]
+    job_metadata: Optional[Dict[str, Any]]
     created_at: datetime
 
     class Config:

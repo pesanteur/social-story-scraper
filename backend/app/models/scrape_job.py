@@ -38,7 +38,7 @@ class ScrapeJob(Base):
     completed_at = Column(DateTime(timezone=True), nullable=True)
     error_message = Column(String, nullable=True)
 
-    metadata = Column(JSON, nullable=True)
+    job_metadata = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relationships
