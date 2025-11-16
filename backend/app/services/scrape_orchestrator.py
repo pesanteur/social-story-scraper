@@ -63,7 +63,8 @@ class ScrapeOrchestrator:
             scraper = ScraperService(api_keys[ServiceName.APIFY])
             tweets_data = await scraper.scrape_twitter_list(
                 preferences.twitter_list_url,
-                max_items=int(preferences.max_tweets_to_scrape)
+                max_items=int(preferences.max_tweets_to_scrape),
+                actor_id=preferences.apify_actor_id
             )
 
             # Calculate engagement scores

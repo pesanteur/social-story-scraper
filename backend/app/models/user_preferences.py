@@ -35,6 +35,7 @@ class UserPreferences(Base):
     # Twitter/X configuration
     twitter_list_url = Column(String, nullable=True)
     max_tweets_to_scrape = Column(String, default="50")
+    apify_actor_id = Column(String, default="apidojo/tweet-scraper")
 
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now())

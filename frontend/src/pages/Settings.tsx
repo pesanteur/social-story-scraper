@@ -88,6 +88,7 @@ export const Settings: React.FC = () => {
         auto_run_enabled: preferences.auto_run_enabled,
         twitter_list_url: preferences.twitter_list_url || '',
         max_tweets_to_scrape: preferences.max_tweets_to_scrape,
+        apify_actor_id: preferences.apify_actor_id || 'apidojo/tweet-scraper',
       });
     }
   }, [preferences]);
@@ -365,6 +366,40 @@ export const Settings: React.FC = () => {
                     className="input"
                     placeholder="https://twitter.com/i/lists/..."
                   />
+                  <p className="mt-1 text-xs text-gray-500">
+                    The Twitter/X list URL that Apify will scrape
+                  </p>
+                </div>
+
+                {/* Apify Actor ID */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Apify Actor ID
+                  </label>
+                  <input
+                    type="text"
+                    value={prefsForm.apify_actor_id || 'apidojo/tweet-scraper'}
+                    onChange={(e) =>
+                      setPrefsForm({ ...prefsForm, apify_actor_id: e.target.value })
+                    }
+                    className="input"
+                    placeholder="apidojo/tweet-scraper"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    The Apify actor to use for scraping. Popular options:
+                    <br/>• apidojo/tweet-scraper (default)
+                    <br/>• vdrmota/twitter-scraper
+                    <br/>• quacker/twitter-scraper
+                    <br/>Browse more at{' '}
+                    <a
+                      href="https://apify.com/store?search=twitter"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary-600 hover:text-primary-800"
+                    >
+                      Apify Store
+                    </a>
+                  </p>
                 </div>
 
                 {/* Max Tweets */}

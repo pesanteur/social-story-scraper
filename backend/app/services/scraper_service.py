@@ -14,7 +14,8 @@ class ScraperService:
     async def scrape_twitter_list(
         self,
         list_url: str,
-        max_items: int = 50
+        max_items: int = 50,
+        actor_id: str = "apidojo/tweet-scraper"
     ) -> List[Dict[str, Any]]:
         """
         Scrape tweets from a Twitter/X list using Apify
@@ -22,12 +23,15 @@ class ScraperService:
         Args:
             list_url: URL of the Twitter list to scrape
             max_items: Maximum number of tweets to fetch
+            actor_id: Apify actor ID to use (defaults to apidojo/tweet-scraper)
+                     Popular alternatives:
+                     - vdrmota/twitter-scraper
+                     - quacker/twitter-scraper
+                     - See https://apify.com/store?search=twitter for more
 
         Returns:
             List of tweet data dictionaries
         """
-        # Apify Twitter Scraper Actor ID
-        actor_id = "apidojo/tweet-scraper"
 
         # Build request payload
         payload = {

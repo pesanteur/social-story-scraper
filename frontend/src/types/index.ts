@@ -43,6 +43,7 @@ export interface UserPreferences {
   auto_run_enabled: boolean;
   twitter_list_url: string | null;
   max_tweets_to_scrape: string;
+  apify_actor_id: string;
   created_at: string;
   updated_at: string | null;
 }
@@ -55,6 +56,7 @@ export interface UserPreferencesUpdate {
   auto_run_enabled?: boolean;
   twitter_list_url?: string;
   max_tweets_to_scrape?: string;
+  apify_actor_id?: string;
 }
 
 export interface ScrapeJob {

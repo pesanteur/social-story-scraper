@@ -15,6 +15,7 @@ class UserPreferencesUpdate(BaseModel):
     auto_run_enabled: Optional[bool] = None
     twitter_list_url: Optional[str] = None
     max_tweets_to_scrape: Optional[str] = None
+    apify_actor_id: Optional[str] = None
 
 
 class UserPreferencesResponse(BaseModel):
@@ -28,6 +29,7 @@ class UserPreferencesResponse(BaseModel):
     auto_run_enabled: bool
     twitter_list_url: Optional[str]
     max_tweets_to_scrape: str
+    apify_actor_id: str
     created_at: datetime
     updated_at: Optional[datetime]
 
